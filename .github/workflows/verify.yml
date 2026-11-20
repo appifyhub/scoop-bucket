@@ -1,0 +1,48 @@
+# https://github.com/ScoopInstaller/Scoop/blob/master/schema.json
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manifests:
+    name: Manifest schema
+    runs-on: windows-latest
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@v7
+        with:
+          path: bucket-repo
+
+      - name: Checkout official Scoop schema
+        uses: actions/checkout@v7
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop-core
+
+      - name: Check manifests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not (Test-Path -LiteralPath './bucket-repo/bucket')) {
+            Write-Output '::notice::No manifests to validate.'
+            exit 0
+          }
+          $schema = './scoop-core/schema.json'
+          $manifests = @(Get-ChildItem -LiteralPath './bucket-repo/bucket' -Filter '*.json' -File)
+          if ($manifests.Count -eq 0) {
+            Write-Output '::notice::No manifests to validate.'
+          }
+          foreach ($manifest in $manifests) {
+            Write-Output "Validating $($manifest.Name)"
+            $json = Get-Content -LiteralPath $manifest.FullName -Raw
+            if (-not (Test-Json -Json $json -SchemaFile $schema -ErrorAction Stop)) {
+              throw "Invalid manifest: $($manifest.Name)"
+            }
+          }
