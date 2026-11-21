@@ -1,0 +1,22 @@
+{
+    "version": "1.0.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/appifyhub/agent-cli/releases/download/v1.0.0/abot_1.0.0_windows_amd64.zip",
+            "bin": [
+                "abot.exe"
+            ],
+            "hash": "a8daaa9bfac62e31928189ebc6d7271746f86cb967e3432d9e2be56441c545e7"
+        },
+        "arm64": {
+            "url": "https://github.com/appifyhub/agent-cli/releases/download/v1.0.0/abot_1.0.0_windows_arm64.zip",
+            "bin": [
+                "abot.exe"
+            ],
+            "hash": "dd4016e990261c1ba291ff302331e84981f45dd2811d71dac39ab6f8c7f76624"
+        }
+    },
+    "homepage": "https://agent.appifyhub.com",
+    "license": "MIT",
+    "description": "Command-line interface for The Agent"
+}
